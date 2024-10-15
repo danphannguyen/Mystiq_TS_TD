@@ -110,7 +110,7 @@ export class NodeResponse extends NodeStruct {
     }
 }
 
-export default async function({}: Object){
+export default async function({ questionId, choice }: { questionId: string, choice: boolean }): Promise<INodeMethods | null>{
     let nodeRoot: INodeMethods | null = null ;
 
     // Ronaldo
@@ -129,15 +129,6 @@ export default async function({}: Object){
     const nodeFamilly: INodeMethods = new NodeQuestion( `A-t-il une famille` );
     const node6gold: INodeMethods = new NodeQuestion( `Possède t'il 6 ballons d'or` );
     const nodeNope: INodeMethods = new NodeResponse( `Je ne connais pas la réponse` );
-    
-    console.log({
-        nodePersonnality: nodePersonnality.getId(),
-        nodeFoot: nodeFoot.getId(),
-        nodeMen: nodeMen.getId(),
-        nodePortugese: nodePortugese.getId(),
-        nodeFamilly: nodeFamilly.getId(),
-        node6gold: node6gold.getId(),
-    });
     
     const nodeRonaldo: INodeMethods = new NodeResponse('Ronaldo !');
     
@@ -161,48 +152,47 @@ export default async function({}: Object){
         .setRight(nodeNope);
     
     nodeRoot = nodePersonnality;
-    
-    let currentNode: INodeMethods | null = nodeRoot;
-    
-    do {
-        // console.log(`
-        //     Id -> ${currentNode?.getId()}    
-        //     Type -> ${currentNode?.getType()}
-        //     Message -> ${currentNode?.getMessage()}
-        //     OUI -> ${currentNode?.getLeft()?.getId()}
-        //     NON -> ${currentNode?.getRight()?.getId()}
-        // `);
-    
-        switch( currentNode.getType() ){
+        
+    if( questionId === null ){
+        return nodeRoot;
+    }
 
-            case 'question' : {
-                console.log(`Question : ${currentNode?.getMessage()} ?`);
+    //
+
+    return null;
+
+    // do {
+    
+    //     switch( currentNode.getType() ){
+
+    //         case 'question' : {
+    //             console.log(`Question : ${currentNode?.getMessage()} ?`);
                 
-                process.stdout.write('~> (O)ui ou (N)on : ');
+    //             process.stdout.write('~> (O)ui ou (N)on : ');
 
-                const answer: string = await getInput();
+    //             const answer: string = await getInput();
 
-                const yes: boolean = /oui/i.test(answer);
+    //             const yes: boolean = /oui/i.test(answer);
 
-                if( yes ) {
-                    currentNode = currentNode?.getLeft();
-                } else {
-                    currentNode = currentNode?.getRight();
-                }
+    //             if( yes ) {
+    //                 currentNode = currentNode?.getLeft();
+    //             } else {
+    //                 currentNode = currentNode?.getRight();
+    //             }
 
-                break;
-            };
+    //             break;
+    //         };
 
-            case 'response' : {
-                console.log(`Reponse : ${currentNode?.getMessage()} ?`);
-                currentNode = null;
-                break;
-            };
+    //         case 'response' : {
+    //             console.log(`Reponse : ${currentNode?.getMessage()} ?`);
+    //             currentNode = null;
+    //             break;
+    //         };
 
-            default:
-                console.warn(`Unsupported node type : ${currentNode?.getType()}`);
-        }
+    //         default:
+    //             console.warn(`Unsupported node type : ${currentNode?.getType()}`);
+    //     }
     
-    } while( currentNode !== null ) ;
+    // } while( currentNode !== null ) ;
     
 }

@@ -43,8 +43,10 @@ interface SocketData {
 
 let onlySocket: boolean = false;
 
+type TSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
+
 // Set up the Socket.io connection
-io.on('connection', (socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>): void => {
+io.on('connection', (socket: TSocket): void => {
     
     if( onlySocket ){
         return ;
@@ -52,11 +54,7 @@ io.on('connection', (socket: Socket<ClientToServerEvents, ServerToClientEvents, 
 
     onlySocket = true;
     
-    // console.log(`Front-end connected: ${socket.id}`);
-
-    socket.on('choice', ({ choice, questionId }) => {
-        console.log(choice,questionId)
-    });
+    socket.on('choice', async ({ choice, questionId }) => applyChoice(questionId, choice, socket ) );
 
     socket.on('disconnect', (): void => {
         // console.log(`Front-end disconnected: ${socket.id}`);
@@ -64,13 +62,26 @@ io.on('connection', (socket: Socket<ClientToServerEvents, ServerToClientEvents, 
     });
 }); ////
 
+async function applyChoice(questionId: string, choice: boolean, socket: TSocket){
+    
+    let toSend: INodeMethods | null = await MystiqEngine({
+        questionId,
+        choice
+    });
+
+    if( toSend === null ) {
+        throw Error(`Grosse erreur !`);
+    }
+
+    socket.emit('question', {
+        id: toSend?.getId(),
+        question: toSend?.getMessage()
+    });
+}
+
 // Start the server
 const PORT: number = 1337;
 
 httpServer.listen(PORT, async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-
-    await MystiqEngine({
-
-    });
 });
