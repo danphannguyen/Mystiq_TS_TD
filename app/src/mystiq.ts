@@ -110,48 +110,47 @@ export class NodeResponse extends NodeStruct {
     }
 }
 
-export default async function({ questionId, choice }: { questionId: string, choice: boolean }): Promise<INodeMethods | null>{
-    let nodeRoot: INodeMethods | null = null ;
+// Ronaldo
 
-    // Ronaldo
-    
-    // 1 - Personnalité célèbre
-    // 2 - Fait du foot
-    // 3 - Homme ou autre
-    // 4 - Portugais
-    // 5 - Famille
-    // 6 - 6 ballon d'or
-    
-    const nodePersonnality: INodeMethods = new NodeQuestion( 'Est-ce une personnalité célèbre' );
-    const nodeFoot: INodeMethods = new NodeQuestion( 'Est-ce un footballeur' );
-    const nodeMen: INodeMethods = new NodeQuestion( 'Est-ce un homme' );
-    const nodePortugese: INodeMethods = new NodeQuestion( 'Est-il portugais' );
-    const nodeFamilly: INodeMethods = new NodeQuestion( `A-t-il une famille` );
-    const node6gold: INodeMethods = new NodeQuestion( `Possède t'il 6 ballons d'or` );
-    const nodeNope: INodeMethods = new NodeResponse( `Je ne connais pas la réponse` );
-    
-    const nodeRonaldo: INodeMethods = new NodeResponse('Ronaldo !');
-    
-    nodePersonnality
-        .setLeft(nodeFoot)
-        .setRight(nodeNope);
-    nodeFoot
-        .setLeft(nodeMen)
-        .setRight(nodeNope);
-    nodeMen
-        .setLeft(nodePortugese)
-        .setRight(nodeNope);
-    nodePortugese
-        .setLeft(nodeFamilly)
-        .setRight(nodeNope);
-    nodeFamilly
-        .setLeft(node6gold)
-        .setRight(nodeNope);
-    node6gold
-        .setLeft(nodeRonaldo)
-        .setRight(nodeNope);
-    
-    nodeRoot = nodePersonnality;
+// 1 - Personnalité célèbre
+// 2 - Fait du foot
+// 3 - Homme ou autre
+// 4 - Portugais
+// 5 - Famille
+// 6 - 6 ballon d'or
+
+const nodePersonnality: INodeMethods = new NodeQuestion( 'Est-ce une personnalité célèbre' );
+const nodeFoot: INodeMethods = new NodeQuestion( 'Est-ce un footballeur' );
+const nodeMen: INodeMethods = new NodeQuestion( 'Est-ce un homme' );
+const nodePortugese: INodeMethods = new NodeQuestion( 'Est-il portugais' );
+const nodeFamilly: INodeMethods = new NodeQuestion( `A-t-il une famille` );
+const node6gold: INodeMethods = new NodeQuestion( `Possède t'il 6 ballons d'or` );
+const nodeNope: INodeMethods = new NodeResponse( `Je ne connais pas la réponse` );
+
+const nodeRonaldo: INodeMethods = new NodeResponse('Ronaldo !');
+
+nodePersonnality
+    .setLeft(nodeFoot)
+    .setRight(nodeNope);
+nodeFoot
+    .setLeft(nodeMen)
+    .setRight(nodeNope);
+nodeMen
+    .setLeft(nodePortugese)
+    .setRight(nodeNope);
+nodePortugese
+    .setLeft(nodeFamilly)
+    .setRight(nodeNope);
+nodeFamilly
+    .setLeft(node6gold)
+    .setRight(nodeNope);
+node6gold
+    .setLeft(nodeRonaldo)
+    .setRight(nodeNope);
+
+
+export default async function({ questionId, choice }: { questionId: string, choice: boolean }): Promise<INodeMethods | null>{
+    let nodeRoot: INodeMethods | null = nodePersonnality;
         
     if( questionId === null ){
         return nodeRoot;
