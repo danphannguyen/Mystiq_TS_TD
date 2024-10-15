@@ -168,6 +168,10 @@ export default async function({ questionId, choice }: { questionId: string, choi
         nodeRonaldo,
     ];
 
+    // Boucle
+    // Condition
+    // Return
+
     return null;
 
     // do {
