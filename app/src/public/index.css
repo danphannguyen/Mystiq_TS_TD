@@ -1,0 +1,119 @@
+html, html > body {
+    margin:0;
+    padding:0;
+}
+
+html {
+    background-color: rgba(244, 204, 190, 0.916);
+}
+
+main {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    width: 100%;
+}
+
+main > div {
+    display: block;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    align-self: auto;
+    order: 0;
+}
+
+main > div > h1 {
+    font-family: "Bungee Spice", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 70px;
+    margin-top: 10px;
+    margin-bottom: -35px;
+}
+
+main > div > img {
+    width: 500px;
+    height: auto;
+}
+
+main > div#question {
+    font-family: "Kalnia Glaze", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-style: normal;
+    font-variation-settings: "wdth" 200;
+    font-size: 30px;
+}
+
+main > div:has(input[type="submit"]){
+    width: fit-content;
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    padding:0;
+    border-top-left-radius: 30px;
+    border-end-end-radius: 30px;
+    overflow: hidden;
+    border: double .2em transparent;
+    background-image: linear-gradient(white, white), linear-gradient(to right, #36e2e2, #a51aba);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+main > div > input[type="submit"] {
+    display: inline-block;
+    width: 100px;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    background-color: rgba(207, 197, 197, 0.309);
+    font-size: 30px;
+    height: 50px;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+main > div > input[type="submit"]:hover {
+    letter-spacing: 3px;
+}
+
+main > div > input[type="submit"][value="OUI"] {
+    color: rgb(46, 146, 46);
+}
+
+main > div > input[type="submit"][value="NON"] {
+    color: rgb(146, 46, 46);
+}
+
+main > div:has(input#new_question) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height:0;
+    transition: all .5s ease;
+    display: block;
+    overflow: hidden;
+}
+
+main > div:has(input#new_question).display {
+    height: 45px;
+}
+
+main > div > input#new_question {
+    width: 500px;
+    font-size: 30px;
+    background-color: rgba(207, 197, 197, 0.309);
+}
+
+main > div#nodes {
+    display: block;
+    width: 500px;
+    height: 150px;
+    border: 1px solid darkred;
+    padding:5px;
+    overflow: scroll;
+    text-align: left;
+}
