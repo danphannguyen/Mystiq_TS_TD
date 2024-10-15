@@ -157,7 +157,16 @@ export default async function({ questionId, choice }: { questionId: string, choi
         return nodeRoot;
     }
 
-    //
+    const nodes: INodeMethods[] = [
+        nodePersonnality,
+        nodeFoot,
+        nodeMen,
+        nodePortugese,
+        nodeFamilly,
+        node6gold,
+        nodeNope,
+        nodeRonaldo,
+    ];
 
     return null;
 

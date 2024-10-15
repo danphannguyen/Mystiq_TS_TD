@@ -54,7 +54,7 @@ io.on('connection', (socket: TSocket): void => {
 
     onlySocket = true;
     
-    socket.on('choice', async ({ choice, questionId }) => applyChoice(questionId, choice, socket ) );
+    socket.on('choice', async ({ choice, questionId }) => applyChoice(questionId, choice, socket) );
 
     socket.on('disconnect', (): void => {
         // console.log(`Front-end disconnected: ${socket.id}`);
