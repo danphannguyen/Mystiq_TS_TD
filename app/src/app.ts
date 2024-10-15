@@ -62,7 +62,7 @@ io.on('connection', (socket: Socket<ClientToServerEvents, ServerToClientEvents, 
         // console.log(`Front-end disconnected: ${socket.id}`);
         onlySocket = false;
     });
-});
+}); //
 
 // Start the server
 const PORT: number = 1337;
