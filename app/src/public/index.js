@@ -13,9 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateQuestionMessage(`Prêt`);
 
-    // Send a message to the server
-    socket.emit("messageFromClient", "Hello, server!");
-
     // Affichage d'une question
     socket.on("question", ({ id, question }) => {
         currentQuestion = {

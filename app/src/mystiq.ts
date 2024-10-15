@@ -1,5 +1,24 @@
 import { v4 as uuidv4 } from 'uuid';
 
+async function sleep(delay: number): Promise<void> {
+    return new Promise(( resolve ) => {
+        setTimeout( resolve, delay ) ;
+    });
+}
+
+async function getInput(): Promise<string> {
+    return new Promise( ( resolve, reject ) => {
+        try {
+            process.stdin.resume();
+            process.stdin.setEncoding('ascii');
+        
+            process.stdin.on('data', resolve);
+        } catch( e ) {
+            reject(e);
+        }
+    });
+}
+
 export interface INodeMethods {
     getType(): 'question' | 'response';
     getMessage(): string;
@@ -91,74 +110,99 @@ export class NodeResponse extends NodeStruct {
     }
 }
 
-let nodeRoot: INodeMethods | null = null ;
+export default async function({}: Object){
+    let nodeRoot: INodeMethods | null = null ;
 
-// Ronaldo
+    // Ronaldo
+    
+    // 1 - Personnalité célèbre
+    // 2 - Fait du foot
+    // 3 - Homme ou autre
+    // 4 - Portugais
+    // 5 - Famille
+    // 6 - 6 ballon d'or
+    
+    const nodePersonnality: INodeMethods = new NodeQuestion( 'Est-ce une personnalité célèbre' );
+    const nodeFoot: INodeMethods = new NodeQuestion( 'Est-ce un footballeur' );
+    const nodeMen: INodeMethods = new NodeQuestion( 'Est-ce un homme' );
+    const nodePortugese: INodeMethods = new NodeQuestion( 'Est-il portugais' );
+    const nodeFamilly: INodeMethods = new NodeQuestion( `A-t-il une famille` );
+    const node6gold: INodeMethods = new NodeQuestion( `Possède t'il 6 ballons d'or` );
+    const nodeNope: INodeMethods = new NodeResponse( `Je ne connais pas la réponse` );
+    
+    console.log({
+        nodePersonnality: nodePersonnality.getId(),
+        nodeFoot: nodeFoot.getId(),
+        nodeMen: nodeMen.getId(),
+        nodePortugese: nodePortugese.getId(),
+        nodeFamilly: nodeFamilly.getId(),
+        node6gold: node6gold.getId(),
+    });
+    
+    const nodeRonaldo: INodeMethods = new NodeResponse('Ronaldo !');
+    
+    nodePersonnality
+        .setLeft(nodeFoot)
+        .setRight(nodeNope);
+    nodeFoot
+        .setLeft(nodeMen)
+        .setRight(nodeNope);
+    nodeMen
+        .setLeft(nodePortugese)
+        .setRight(nodeNope);
+    nodePortugese
+        .setLeft(nodeFamilly)
+        .setRight(nodeNope);
+    nodeFamilly
+        .setLeft(node6gold)
+        .setRight(nodeNope);
+    node6gold
+        .setLeft(nodeRonaldo)
+        .setRight(nodeNope);
+    
+    nodeRoot = nodePersonnality;
+    
+    let currentNode: INodeMethods | null = nodeRoot;
+    
+    do {
+        // console.log(`
+        //     Id -> ${currentNode?.getId()}    
+        //     Type -> ${currentNode?.getType()}
+        //     Message -> ${currentNode?.getMessage()}
+        //     OUI -> ${currentNode?.getLeft()?.getId()}
+        //     NON -> ${currentNode?.getRight()?.getId()}
+        // `);
+    
+        switch( currentNode.getType() ){
 
-// 1 - Personnalité célèbre
-// 2 - Fait du foot
-// 3 - Homme ou autre
-// 4 - Portugais
-// 5 - Famille
-// 6 - 6 ballon d'or
+            case 'question' : {
+                console.log(`Question : ${currentNode?.getMessage()} ?`);
+                
+                process.stdout.write('~> (O)ui ou (N)on : ');
 
-const nodePersonnality: INodeMethods = new NodeQuestion( 'Est-ce une personnalité célèbre' );
-const nodeFoot: INodeMethods = new NodeQuestion( 'Est-ce un footballeur' );
-const nodeMen: INodeMethods = new NodeQuestion( 'Est-ce un homme' );
-const nodePortugese: INodeMethods = new NodeQuestion( 'Est-il portugais' );
-const nodeFamilly: INodeMethods = new NodeQuestion( `A-t-il une famille` );
-const node6gold: INodeMethods = new NodeQuestion( `Possède t'il 6 ballons d'or` );
-const nodeNope: INodeMethods = new NodeResponse( `Je ne connais pas la réponse` );
+                const answer: string = await getInput();
 
-console.log({
-    nodePersonnality: nodePersonnality.getId(),
-    nodeFoot: nodeFoot.getId(),
-    nodeMen: nodeMen.getId(),
-    nodePortugese: nodePortugese.getId(),
-    nodeFamilly: nodeFamilly.getId(),
-    node6gold: node6gold.getId(),
-});
+                const yes: boolean = /oui/i.test(answer);
 
-const nodeRonaldo: INodeMethods = new NodeResponse('Ronaldo !');
+                if( yes ) {
+                    currentNode = currentNode?.getLeft();
+                } else {
+                    currentNode = currentNode?.getRight();
+                }
 
-nodePersonnality
-    .setLeft(nodeFoot)
-    .setRight(nodeNope);
-nodeFoot
-    .setLeft(nodeMen)
-    .setRight(nodeNope);
-nodeMen
-    .setLeft(nodePortugese)
-    .setRight(nodeNope);
-nodePortugese
-    .setLeft(nodeFamilly)
-    .setRight(nodeNope);
-nodeFamilly
-    .setLeft(node6gold)
-    .setRight(nodeNope);
-node6gold
-    .setLeft(nodeRonaldo)
-    .setRight(nodeNope);
+                break;
+            };
 
-nodeRoot = nodePersonnality;
+            case 'response' : {
+                console.log(`Reponse : ${currentNode?.getMessage()} ?`);
+                currentNode = null;
+                break;
+            };
 
-let currentNode: INodeMethods | null = nodeRoot;
-
-do {
-    // console.log(`
-    //     Id -> ${currentNode?.getId()}    
-    //     Type -> ${currentNode?.getType()}
-    //     Message -> ${currentNode?.getMessage()}
-    //     OUI -> ${currentNode?.getLeft()?.getId()}
-    //     NON -> ${currentNode?.getRight()?.getId()}
-    // `);
-
-    if( currentNode.getType() === 'question' ){
-        console.log(`Question : ${currentNode?.getMessage()} ?`);
-
-        
-    } 
-
-    currentNode = currentNode?.getLeft();
-
-} while( currentNode !== null ) ;
+            default:
+                console.warn(`Unsupported node type : ${currentNode?.getType()}`);
+        }
+    
+    } while( currentNode !== null ) ;
+    
+}

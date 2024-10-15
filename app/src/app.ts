@@ -3,9 +3,7 @@ import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import * as path from 'path';
 
-import { NodeQuestion, NodeResponse, INodeMethods } from './mystiq';
-
-const x: NodeResponse = new NodeResponse('');
+import MystiqEngine, { NodeQuestion, NodeResponse, INodeMethods } from './mystiq';
 
 // Create an instance of Express
 const app = express();
@@ -54,29 +52,14 @@ io.on('connection', (socket: Socket<ClientToServerEvents, ServerToClientEvents, 
 
     onlySocket = true;
     
-    console.log(`Front-end connected: ${socket.id}`);
-
-    //
-    // for( let i = 1 ; i < 11 ; ++ i ){
-    //     setTimeout(function(index){
-    //         socket.emit('question', {
-    //             id: `FDSFDS`,
-    //             question: `Ma question ${index}`
-    //         });
-    //     }, i * 1000, i);
-    // }
-
-    // //
-    // socket.emit('newQuestionPossibility');
-
-    //
+    // console.log(`Front-end connected: ${socket.id}`);
 
     socket.on('choice', ({ choice, questionId }) => {
         console.log(choice,questionId)
     });
 
     socket.on('disconnect', (): void => {
-        console.log(`Front-end disconnected: ${socket.id}`);
+        // console.log(`Front-end disconnected: ${socket.id}`);
         onlySocket = false;
     });
 });
@@ -84,6 +67,10 @@ io.on('connection', (socket: Socket<ClientToServerEvents, ServerToClientEvents, 
 // Start the server
 const PORT: number = 1337;
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+
+    await MystiqEngine({
+
+    });
 });

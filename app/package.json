@@ -9,6 +9,7 @@
     },
     "devDependencies": {
         "@types/express": "5.0.0",
+        "@types/prompt-sync": "^4.2.3",
         "@types/socket.io": "3.0.1",
         "@types/uuid": "^10.0.0",
         "copyfiles": "2.4.1",
