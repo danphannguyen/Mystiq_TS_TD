@@ -70,7 +70,7 @@ async function applyChoice(questionId: string, choice: boolean, socket: TSocket)
     });
 
     if( toSend === null ) {
-        throw Error(`Grosse erreur !`);
+        return
     }
 
     socket.emit('question', {

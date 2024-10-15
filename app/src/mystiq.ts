@@ -1,19 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
 
 async function sleep(delay: number): Promise<void> {
-    return new Promise(( resolve ) => {
-        setTimeout( resolve, delay ) ;
+    return new Promise((resolve) => {
+        setTimeout(resolve, delay);
     });
 }
 
 async function getInput(): Promise<string> {
-    return new Promise( ( resolve, reject ) => {
+    return new Promise((resolve, reject) => {
         try {
             process.stdin.resume();
             process.stdin.setEncoding('ascii');
-        
+
             process.stdin.on('data', resolve);
-        } catch( e ) {
+        } catch (e) {
             reject(e);
         }
     });
@@ -33,12 +33,12 @@ abstract class NodeStruct implements INodeMethods {
 
     protected readonly id: string = uuidv4();
 
-    abstract getType(): "question" | "response" ;
+    abstract getType(): "question" | "response";
     abstract getMessage(): string;
-    abstract getRight(): INodeMethods | null ;
-    abstract getLeft(): INodeMethods | null ;
-    abstract setRight(value: NodeStruct): INodeMethods | never ;
-    abstract setLeft(value: NodeStruct): INodeMethods | never ;
+    abstract getRight(): INodeMethods | null;
+    abstract getLeft(): INodeMethods | null;
+    abstract setRight(value: NodeStruct): INodeMethods | never;
+    abstract setLeft(value: NodeStruct): INodeMethods | never;
 
     public getId(): string {
         return this.id;
@@ -47,10 +47,10 @@ abstract class NodeStruct implements INodeMethods {
 
 export class NodeQuestion extends NodeStruct {
 
-    private left : NodeStruct | null = null;
+    private left: NodeStruct | null = null;
     private right: NodeStruct | null = null;
 
-    constructor(public readonly question: string){
+    constructor(public readonly question: string) {
         super();
     }
 
@@ -82,7 +82,7 @@ export class NodeQuestion extends NodeStruct {
 
 export class NodeResponse extends NodeStruct {
 
-    constructor(public readonly response: string){
+    constructor(public readonly response: string) {
         super();
     }
 
@@ -119,13 +119,13 @@ export class NodeResponse extends NodeStruct {
 // 5 - Famille
 // 6 - 6 ballon d'or
 
-const nodePersonnality: INodeMethods = new NodeQuestion( 'Est-ce une personnalité célèbre' );
-const nodeFoot: INodeMethods = new NodeQuestion( 'Est-ce un footballeur' );
-const nodeMen: INodeMethods = new NodeQuestion( 'Est-ce un homme' );
-const nodePortugese: INodeMethods = new NodeQuestion( 'Est-il portugais' );
-const nodeFamilly: INodeMethods = new NodeQuestion( `A-t-il une famille` );
-const node6gold: INodeMethods = new NodeQuestion( `Possède t'il 6 ballons d'or` );
-const nodeNope: INodeMethods = new NodeResponse( `Je ne connais pas la réponse` );
+const nodePersonnality: INodeMethods = new NodeQuestion('Est-ce une personnalité célèbre');
+const nodeFoot: INodeMethods = new NodeQuestion('Est-ce un footballeur');
+const nodeMen: INodeMethods = new NodeQuestion('Est-ce un homme');
+const nodePortugese: INodeMethods = new NodeQuestion('Est-il portugais');
+const nodeFamilly: INodeMethods = new NodeQuestion(`A-t-il une famille`);
+const node6gold: INodeMethods = new NodeQuestion(`Possède t'il 6 ballons d'or`);
+const nodeNope: INodeMethods = new NodeResponse(`Je ne connais pas la réponse`);
 
 const nodeRonaldo: INodeMethods = new NodeResponse('Ronaldo !');
 
@@ -149,10 +149,10 @@ node6gold
     .setRight(nodeNope);
 
 
-export default async function({ questionId, choice }: { questionId: string, choice: boolean }): Promise<INodeMethods | null>{
+export default async function ({ questionId, choice }: { questionId: string, choice: boolean }): Promise<INodeMethods | null> {
     let nodeRoot: INodeMethods | null = nodePersonnality;
-        
-    if( questionId === null ){
+
+    if (questionId === null) {
         return nodeRoot;
     }
 
@@ -168,18 +168,31 @@ export default async function({ questionId, choice }: { questionId: string, choi
     ];
 
     // Boucle
+    const currentNode: INodeMethods | undefined = nodes.find((element) => element.getId() === questionId);
+    
+    // Condition
+    if (currentNode !== undefined) {
+        if (choice) {
+            return currentNode.getLeft();
+        } else {
+            return currentNode.getRight();
+        }
+    }
+
+
+
+    // Boucle
     // Condition
     // Return
-
     return null;
 
     // do {
-    
+
     //     switch( currentNode.getType() ){
 
     //         case 'question' : {
     //             console.log(`Question : ${currentNode?.getMessage()} ?`);
-                
+
     //             process.stdout.write('~> (O)ui ou (N)on : ');
 
     //             const answer: string = await getInput();
@@ -204,7 +217,7 @@ export default async function({ questionId, choice }: { questionId: string, choi
     //         default:
     //             console.warn(`Unsupported node type : ${currentNode?.getType()}`);
     //     }
-    
+
     // } while( currentNode !== null ) ;
-    
+
 }
